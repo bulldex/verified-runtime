@@ -1,0 +1,42 @@
+Summary: OCI runtime written in C
+Name: crun
+Version: @RPM_VERSION@
+Release: 1%{?dist}
+Source0: https://github.com/containers/crun/releases/download/%{version}/%{name}-@VERSION@.tar.gz
+License: GPLv3+
+URL: https://github.com/containers/crun
+
+# We always run autogen.sh
+BuildRequires: autoconf
+BuildRequires: automake
+BuildRequires: gcc
+BuildRequires: python
+BuildRequires: git
+BuildRequires: libcap-devel
+BuildRequires: systemd-devel
+BuildRequires: yajl-devel
+BuildRequires: libseccomp-devel
+BuildRequires: python3-libmount
+BuildRequires: libtool
+BuildRequires: go-md2man
+
+%description
+crun is a OCI runtime
+
+%prep
+%autosetup -n %{name}-@VERSION@
+
+%build
+./autogen.sh
+%configure --disable-silent-rules
+
+%make_build
+
+%install
+%make_install
+rm -rf $RPM_BUILD_ROOT/usr/lib*
+
+%files
+%license COPYING
+%{_bindir}/%{name}
+%{_mandir}/man1/*
