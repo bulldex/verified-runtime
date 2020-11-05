@@ -1,16 +1,5 @@
 # crun
 
-[![Build Status](https://travis-ci.org/containers/crun.svg?branch=master)](https://travis-ci.org/containers/crun)
-[![Coverity Status](https://scan.coverity.com/projects/17787/badge.svg)](https://scan.coverity.com/projects/giuseppe-crun)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/containers/crun.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/containers/crun/alerts/)
-[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/containers/crun.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/containers/crun/context:cpp)
-
-A fast and low-memory footprint OCI Container Runtime fully written in
-C.
-
-crun conforms to the OCI Container Runtime specifications
-(<https://github.com/opencontainers/runtime-spec>).
-
 ## Documentation
 
 The user documentation is available [here](crun.1.md).
@@ -62,33 +51,6 @@ hard limit set directly in Podman before calling the OCI runtime.
 
 These dependencies are required for the build:
 
-### Fedora
-
-```console
-$ sudo dnf install -y make python git gcc automake autoconf libcap-devel \
-    systemd-devel yajl-devel libseccomp-devel \
-    go-md2man glibc-static python3-libmount libtool
-```
-
-### RHEL/CentOS 8
-
-```console
-$ sudo yum --enablerepo='*' install -y make automake autoconf gettext \
-    libtool gcc libcap-devel systemd-devel yajl-devel \
-    libseccomp-devel python36
-```
-
-go-md2man is not available on RHEL/CentOS 8, so if you'd like to build
-the man page, you also need to manually install go-md2man. It can be
-installed with:
-
-```console
-$ sudo yum --enablerepo='*' install -y golang
-$ export GOPATH=$HOME/go
-$ go get github.com/cpuguy83/go-md2man
-$ export PATH=$PATH:$GOPATH/bin
-```
-
 ### Ubuntu
 
 ```console
@@ -114,7 +76,6 @@ afterwards.
 Once all the dependencies are installed:
 
 ```console
-$ ./autogen.sh
 $ ./configure
 $ make
 ```
@@ -128,37 +89,3 @@ $ sudo make install
 ### Shared Libraries
 
 The previous build instructions do not enable shared libraries, therefore you will be unable to use libcrun. If you wish to build the shared libraries you can change the previous `./configure.sh` statement to `./configure --enable-shared`.
-
-## Static build
-
-It is possible to build a statically linked binary of crun by using the
-officially provided
-[nix](https://nixos.org/nixos/packages.html?attr=crun&channel=nixpkgs-unstable&query=crun)
-package and the derivation of it [within this repository](nix/). The
-builds are completely reproducible and will create a x86\_64/amd64
-stripped ELF binary for [glibc](https://www.gnu.org/software/libc).
-
-### Nix
-
-To build the binaries by locally installing the nix package manager:
-
-```console
-$ nix build -f nix/
-```
-
-### Ansible
-
-An [Ansible Role](https://github.com/alvistack/ansible-role-crun) is
-also available to automate the installation of the above statically
-linked binary on its supported OS:
-
-```console
-$ sudo su -
-# mkdir -p ~/.ansible/roles
-# cd ~/.ansible/roles
-# git clone https://github.com/alvistack/ansible-role-crun.git crun
-# cd ~/.ansible/roles/crun
-# pip3 install --upgrade --ignore-installed --requirement requirements.txt
-# molecule converge
-# molecule verify
-```
